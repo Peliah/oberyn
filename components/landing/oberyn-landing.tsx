@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { AuthEntryDialog } from "@/components/landing/auth-entry-dialog";
+import { AuthModal } from "@/components/auth/auth-modal";
 import { HeroAsideVisual } from "@/components/landing/hero-aside-visual";
 import { HeroCard } from "@/components/landing/hero-card";
 import { HeroHeading } from "@/components/landing/hero-heading";
@@ -29,7 +29,7 @@ export function OberynLanding() {
           </HeroCard>
         </div>
       </LandingShell>
-      <AuthEntryDialog open={authOpen} onOpenChange={setAuthOpen} />
+      <AuthModal open={authOpen} onOpenChange={setAuthOpen} />
     </>
   );
 }
