@@ -1,10 +1,6 @@
 import { bufferSource } from "@/lib/crypto/buffer-source";
 import { PBKDF2_ITERATIONS, RSA_OAEP_HASH } from "@/lib/crypto/constants";
 
-/**
- * Derive AES-256-GCM from the password (same salt is stored on the user as `pbkdf2_salt`).
- * Used to encrypt the PKCS#8 private key. (AES-KW cannot wrap arbitrary PKCS#8 lengths in the Web Crypto API.)
- */
 export async function derivePrivateKeyWrapKey(
   password: string,
   salt: Uint8Array,

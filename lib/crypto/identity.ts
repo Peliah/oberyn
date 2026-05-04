@@ -33,7 +33,6 @@ export async function generateIdentityKeyPair(
   return { publicKey: pair.publicKey, privateKey: pair.privateKey };
 }
 
-/** SPKI, standard base64 — matches `public_key` on UserProfile. */
 export async function exportPublicKeySpkiBase64(
   publicKey: CryptoKey,
   subtle: SubtleCrypto = crypto.subtle,
@@ -54,12 +53,6 @@ function randomIv(): Uint8Array {
   return iv;
 }
 
-/**
- * Encrypt PKCS#8 with AES-256-GCM (PBKDF2-derived key).
- * Wire format: `IV (12 bytes) || ciphertext` (ciphertext includes the 128-bit GCM tag).
- *
- * WhisperBox docs mention AES-KW; RFC 3394 requires plaintext length ≡ 0 (mod 8), which PKCS#8 DER does not guarantee, so `wrapKey(AES-KW)` fails in browsers. This scheme keeps PBKDF2 + opaque blob storage.
- */
 export async function wrapPrivateKeyPkcs8(
   privateKey: CryptoKey,
   password: string,
@@ -107,7 +100,6 @@ export async function unwrapPrivateKeyPkcs8(
   ]);
 }
 
-/** Import RSA-OAEP public key from SPKI base64 (peer or self). */
 export async function importRsaOaepPublicKey(
   spkiBase64: string,
   subtle: SubtleCrypto = crypto.subtle,

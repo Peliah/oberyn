@@ -25,7 +25,6 @@ function formatErrorBody(status: number, body: unknown): string {
 }
 
 export type WhisperboxRequestInit = RequestInit & {
-  /** Sets `Authorization: Bearer …` */
   token?: string;
 };
 

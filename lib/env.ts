@@ -1,8 +1,3 @@
-/**
- * WhisperBox base URL and derived endpoints.
- * Only `NEXT_PUBLIC_*` vars are available in the browser bundle.
- */
-
 const ENV_KEY = "NEXT_PUBLIC_WHISPERBOX_URL";
 
 function readWhisperboxUrl(): string {
@@ -18,12 +13,10 @@ function readWhisperboxUrl(): string {
   return raw.trim().replace(/\/+$/, "");
 }
 
-/** HTTPS origin without trailing slash, e.g. `https://whisperbox.koyeb.app`. */
 export function getWhisperboxHttpOrigin(): string {
   return readWhisperboxUrl();
 }
 
-/** WebSocket URL for real-time messaging (`/ws` path). */
 export function getWhisperboxWsUrl(accessToken: string): string {
   const origin = readWhisperboxUrl();
   if (!origin) {
@@ -43,7 +36,6 @@ export function getWhisperboxWsUrl(accessToken: string): string {
   return ws.toString();
 }
 
-/** REST base for fetch helpers — origin only; paths start with `/`. */
 export function assertWhisperboxConfigured(): void {
   if (!readWhisperboxUrl()) {
     throw new Error(`${ENV_KEY} is not set`);

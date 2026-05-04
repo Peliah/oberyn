@@ -1,4 +1,4 @@
-/** DTOs aligned with `docs/whisperbox-openapi.json`. */
+import type { EncryptedPayload } from "@/types/encrypted-payload";
 
 export type UserProfile = {
   id: string;
@@ -55,6 +55,27 @@ export type UserPublicInfo = {
 
 export type UserPublicKey = {
   public_key: string;
+};
+
+export type ConversationSummary = {
+  user_id: string;
+  display_name: string;
+  username: string;
+  last_message_at: string | null;
+};
+
+export type MessageResponse = {
+  id: string;
+  from_user_id: string;
+  to_user_id: string;
+  payload: Record<string, unknown>;
+  delivered: boolean;
+  created_at: string;
+};
+
+export type SendMessageRequest = {
+  to: string;
+  payload: EncryptedPayload;
 };
 
 export type ApiValidationError = {
