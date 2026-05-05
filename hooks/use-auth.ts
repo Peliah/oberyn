@@ -16,7 +16,7 @@ import {
 import { loginWhisperbox, registerWhisperbox } from "@/lib/api/whisperbox-api";
 import { useSession } from "@/lib/session/session-context";
 
-export function useAuth(options?: { onAuthenticated?: () => void }) {
+export function useAuth() {
   const { setAuthenticatedSession } = useSession();
 
   const registerMutation = useMutation({
@@ -48,7 +48,6 @@ export function useAuth(options?: { onAuthenticated?: () => void }) {
         privateKey,
       });
       toast.success("Signed up — session unlocked on this device.");
-      options?.onAuthenticated?.();
     },
     onError: (err: Error) => {
       toast.error(err.message || "Could not create account");
@@ -75,7 +74,6 @@ export function useAuth(options?: { onAuthenticated?: () => void }) {
         privateKey,
       });
       toast.success("Signed in.");
-      options?.onAuthenticated?.();
     },
     onError: (err: Error) => {
       toast.error(err.message || "Could not sign in");
