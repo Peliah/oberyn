@@ -1,7 +1,9 @@
+import { OberynWordmark } from "@/components/brand/oberyn-wordmark";
+
 export function HeroHeading() {
   return (
-    <h1 className="font-oberyn-display text-4xl tracking-tight text-black sm:text-5xl lg:text-6xl">
-      Oberyn
+    <h1 className="w-full max-w-xl">
+      <OberynWordmark priority className="max-h-14 w-auto sm:max-h-[4.25rem] lg:max-h-[5rem]" />
     </h1>
   );
 }

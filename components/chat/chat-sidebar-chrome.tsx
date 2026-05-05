@@ -10,6 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { OberynWordmark } from "@/components/brand/oberyn-wordmark";
 import { UserSearchField } from "@/components/chat/user-search-field";
 import { initialsFromDisplayName } from "@/lib/chat/initials";
 import type { UserPublicInfo } from "@/types/whisperbox-api";
@@ -39,11 +40,8 @@ export function ChatSidebarBrand() {
 
   return (
     <div className="mb-4 flex items-center justify-between gap-2">
-      <Link
-        href="/"
-        className="font-oberyn-display text-2xl font-normal tracking-tight text-black hover:opacity-80"
-      >
-        {APP_NAME}
+      <Link href="/" className="block min-w-0 max-w-[min(100%,11rem)] shrink hover:opacity-90">
+        <OberynWordmark className="max-h-9 w-auto" />
       </Link>
       <span className="shrink-0 rounded-full border-2 border-black bg-[#ff6b1a] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
         E2EE
