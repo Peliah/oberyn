@@ -1,15 +1,16 @@
 "use client";
 
+import { ChatCircle, LockKey } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import { ChatLayout } from "@/components/chat/chat-layout";
 import { ChatLoading } from "@/components/chat/chat-loading";
 import {
-  ChatHeaderSearch,
   ChatHeaderTrailingHome,
+  ChatSidebarAccountFooter,
   ChatSidebarBrand,
-  ChatSidebarSignOutFooter,
+  ChatSidebarSearch,
 } from "@/components/chat/chat-sidebar-chrome";
 import { ChatThread } from "@/components/chat/chat-thread";
 import { ConversationListGroups } from "@/components/chat/conversation-list-groups";
@@ -59,7 +60,7 @@ export function ChatView() {
 
   if (!accessToken || !user) {
     return (
-      <div className="flex min-h-[50vh] items-center justify-center bg-[#ff6b1a] px-4 font-mono text-xs text-white">
+      <div className="flex min-h-[50vh] items-center justify-center bg-[#e8e6e1] px-4 font-mono text-xs text-neutral-700">
         Redirecting…
       </div>
     );
@@ -68,6 +69,8 @@ export function ChatView() {
   const selectPartner = (userId: string) => {
     router.push(`/chat?with=${encodeURIComponent(userId)}`);
   };
+
+  const welcomeFirst = user.display_name.trim().split(/\s+/)[0] ?? user.display_name;
 
   const main =
     partnerId && partnerMeta ? (
@@ -93,28 +96,22 @@ export function ChatView() {
         />
       </div>
     ) : (
-      <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden px-6 py-16 text-center">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.35]"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              135deg,
-              transparent,
-              transparent 12px,
-              rgba(0,0,0,0.04) 12px,
-              rgba(0,0,0,0.04) 13px
-            )`,
-          }}
-          aria-hidden
-        />
-        <div className="relative max-w-lg rounded-sm border-2 border-black bg-[#FDF6E3]/95 px-8 py-10 shadow-[8px_8px_0_0_rgba(0,0,0,0.85)]">
-          <p className="font-oberyn-display text-2xl tracking-wide text-neutral-900">Pick a thread</p>
-          <p className="mt-4 font-mono text-[11px] leading-relaxed text-muted-foreground">
-            Drag the rail grip or press{" "}
-            <kbd className="rounded border border-black bg-white px-1.5 py-0.5 font-mono text-[10px]">⌘B</kbd>{" "}
-            /{" "}
-            <kbd className="rounded border border-black bg-white px-1.5 py-0.5 font-mono text-[10px]">Ctrl+B</kbd>
-            . Recent chats sit in the sidebar index; use the search bar up top to open anyone new.
+      <div className="relative flex flex-1 flex-col items-center justify-center px-6 py-20 text-center">
+        <div className="flex max-w-md flex-col items-center gap-6">
+          <div className="flex size-16 items-center justify-center rounded-md border-2 border-black bg-[#ff6b1a] shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+            <ChatCircle className="size-9 text-white" weight="fill" aria-hidden />
+          </div>
+          <div>
+            <h1 className="font-oberyn-display text-2xl font-normal uppercase tracking-wide text-black sm:text-3xl">
+              Welcome, {welcomeFirst}
+            </h1>
+            <p className="mt-3 font-mono text-sm leading-relaxed text-neutral-600">
+              Pick a conversation on the left, or search for someone to start a new encrypted thread.
+            </p>
+          </div>
+          <p className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-[#ff6b1a] px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-wide text-white shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+            <LockKey className="size-3.5 shrink-0" weight="bold" aria-hidden />
+            Your private key stays on this device only
           </p>
         </div>
       </div>
@@ -122,21 +119,30 @@ export function ChatView() {
 
   return (
     <ChatLayout
-      sidebarHeader={<ChatSidebarBrand />}
-      sidebarFooter={<ChatSidebarSignOutFooter onSignOut={() => void signOut()} />}
-      headerSearch={
-        <ChatHeaderSearch
-          query={searchQuery}
-          onQueryChange={setSearchQuery}
-          results={searchResults}
-          isLoading={searchLoading}
-          onPickUser={(u) => {
-            selectPartner(u.id);
-            setSearchQuery("");
-          }}
-          currentUserId={user.id}
+      sidebarHeader={
+        <>
+          <ChatSidebarBrand />
+          <ChatSidebarSearch
+            query={searchQuery}
+            onQueryChange={setSearchQuery}
+            results={searchResults}
+            isLoading={searchLoading}
+            onPickUser={(u) => {
+              selectPartner(u.id);
+              setSearchQuery("");
+            }}
+            currentUserId={user.id}
+          />
+        </>
+      }
+      sidebarFooter={
+        <ChatSidebarAccountFooter
+          displayName={user.display_name}
+          username={user.username}
+          onSignOut={() => void signOut()}
         />
       }
+      headerTrailing={<ChatHeaderTrailingHome />}
       sidebarBody={
         <ConversationListGroups
           conversations={conversations}
@@ -145,22 +151,6 @@ export function ChatView() {
           onSelectConversation={selectPartner}
         />
       }
-      insetHeader={
-        <div className="flex min-w-0 flex-1 items-start gap-2 sm:gap-3">
-          <div className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate font-mono text-[10px] text-muted-foreground">
-              {user.display_name} · @{user.username}
-            </span>
-          </div>
-          <div className="ml-auto flex shrink-0 flex-col items-end gap-1">
-            <span className="rounded-none border border-black bg-white px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-neutral-800 shadow-[2px_2px_0_0_#000]">
-              E2E
-            </span>
-            <span className="font-mono text-[9px] text-muted-foreground">Session unlocked</span>
-          </div>
-        </div>
-      }
-      headerTrailing={<ChatHeaderTrailingHome />}
       main={main}
     />
   );

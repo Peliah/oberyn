@@ -70,13 +70,11 @@ export function ConversationRow({ conversation, selected, onSelect }: Conversati
       type="button"
       onClick={onSelect}
       className={cn(
-        "group/row flex w-full gap-3 border-b-2 border-black/80 px-2.5 py-2.5 text-left transition-colors",
-        selected
-          ? "bg-gradient-to-r from-[#ff6b1a]/20 to-transparent"
-          : "bg-transparent hover:bg-black/[0.04]",
+        "group/row flex w-full gap-3 border-b border-black/10 px-3 py-3 text-left transition-colors",
+        selected ? "bg-[#ff6b1a]/10" : "bg-transparent hover:bg-black/[0.03]",
       )}
     >
-      <Avatar size="sm" className="mt-0.5 border-2 border-black shadow-[2px_2px_0_0_#000]">
+      <Avatar size="sm" className="mt-0.5 border-2 border-black">
         <AvatarFallback
           className={cn(
             "rounded-full bg-[#7dd3fc]/40 font-mono text-[10px] font-semibold text-neutral-900",

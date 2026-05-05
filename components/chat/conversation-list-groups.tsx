@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatsCircle, Fire } from "@phosphor-icons/react";
+import { ChatsCircle } from "@phosphor-icons/react";
 import { useMemo } from "react";
 
 import { ConversationRow } from "@/components/chat/conversation-row";
@@ -56,12 +56,12 @@ export function ConversationListGroups({
       <div
         className={
           rail
-            ? "flex flex-col items-center gap-2 py-6"
-            : "flex items-center gap-2 px-4 py-8 font-mono text-[10px] text-muted-foreground"
+            ? "flex flex-col items-center gap-2 py-8"
+            : "flex items-center justify-center gap-2 py-12 font-mono text-[11px] text-muted-foreground"
         }
       >
-        <Spinner className="size-3.5 text-[#ff6b1a]" />
-        {!rail ? <span>Syncing conversations…</span> : null}
+        <Spinner className="size-4 text-[#ff6b1a]" />
+        {!rail ? <span>Loading…</span> : null}
       </div>
     );
   }
@@ -69,28 +69,34 @@ export function ConversationListGroups({
   if (sorted.length === 0) {
     if (rail) {
       return (
-        <div className="flex justify-center py-4">
+        <div className="flex justify-center py-6">
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className="flex size-10 items-center justify-center rounded-full border-2 border-dashed border-black/35 bg-white/80"
+                className="flex size-10 items-center justify-center rounded-md border-2 border-dashed border-black/25 bg-neutral-50"
                 aria-label="No conversations yet"
               >
                 <ChatsCircle className="size-5 text-muted-foreground" />
               </div>
             </TooltipTrigger>
-            <TooltipContent side="right" className="max-w-[12rem] border-2 border-black font-mono text-[10px]">
-              No threads yet — use the search bar at the top to start.
+            <TooltipContent side="right" className="max-w-[12rem] text-xs">
+              Search the sidebar to start a thread.
             </TooltipContent>
           </Tooltip>
         </div>
       );
     }
     return (
-      <div className="mx-3 my-6 rounded-lg border-2 border-dashed border-black/25 bg-white/60 px-3 py-5 text-center">
-        <p className="font-oberyn-display text-sm tracking-wide text-neutral-800">No threads yet</p>
-        <p className="mt-2 font-mono text-[10px] leading-relaxed text-muted-foreground">
-          Use the search bar at the top to reach someone — payloads stay ciphertext end-to-end.
+      <div className="flex flex-col items-center px-4 py-14 text-center">
+        <div
+          className="mb-4 flex size-12 items-center justify-center rounded-md border-2 border-black bg-amber-100 shadow-[2px_2px_0_0_rgba(0,0,0,1)]"
+          aria-hidden
+        >
+          <ChatsCircle className="size-7 text-neutral-800" />
+        </div>
+        <p className="font-oberyn-display text-base tracking-wide text-neutral-900">No conversations yet</p>
+        <p className="mt-2 max-w-[16rem] font-mono text-xs leading-relaxed text-muted-foreground">
+          Search for someone above to start your first encrypted thread.
         </p>
       </div>
     );
@@ -98,16 +104,15 @@ export function ConversationListGroups({
 
   return (
     <>
-      <SidebarGroup className="py-1">
+      <SidebarGroup className="py-0">
         <SidebarGroupLabel
           className={
             rail
               ? "sr-only"
-              : "flex items-center gap-1.5 px-3 font-oberyn-display text-[11px] uppercase tracking-[0.2em] text-neutral-600"
+              : "px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
           }
         >
-          <Fire className="size-3.5 text-[#ff6b1a]" weight="fill" aria-hidden />
-          Latest {latest.length}
+          Recent
         </SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu className="gap-0">
@@ -126,16 +131,16 @@ export function ConversationListGroups({
 
       {more.length > 0 ? (
         <>
-          <SidebarSeparator className="mx-0 h-[2px] bg-black" />
-          <SidebarGroup className="py-1">
+          <SidebarSeparator className="mx-3 my-1 bg-black/10" />
+          <SidebarGroup className="py-0">
             <SidebarGroupLabel
               className={
                 rail
                   ? "sr-only"
-                  : "px-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+                  : "px-3 py-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
               }
             >
-              Earlier · {more.length}
+              Earlier
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="gap-0">

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftIcon, HouseIcon, SignOutIcon } from "@phosphor-icons/react";
+import { HouseIcon, SignOutIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -11,19 +11,18 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { UserSearchField } from "@/components/chat/user-search-field";
-import { cn } from "@/lib/utils";
+import { initialsFromDisplayName } from "@/lib/chat/initials";
 import type { UserPublicInfo } from "@/types/whisperbox-api";
 
 const APP_NAME = "Oberyn";
 
-/** App mark + home link: full wordmark expanded, single “O” when the rail is collapsed. */
 export function ChatSidebarBrand() {
   const { state, isMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
 
   if (collapsed) {
     return (
-      <div className="flex w-full justify-center px-0.5 py-1">
+      <div className="flex w-full justify-center py-1">
         <Tooltip>
           <TooltipTrigger asChild>
             <SidebarMenuButton asChild className="size-10! justify-center p-0 font-oberyn-display text-xl leading-none tracking-wide">
@@ -39,35 +38,38 @@ export function ChatSidebarBrand() {
   }
 
   return (
-    <div className="flex flex-col gap-2 px-1">
+    <div className="mb-4 flex items-center justify-between gap-2">
       <Link
         href="/"
-        className="font-oberyn-display text-xl leading-none tracking-wide text-neutral-950 underline-offset-4 hover:underline"
+        className="font-oberyn-display text-2xl font-normal tracking-tight text-black hover:opacity-80"
       >
         {APP_NAME}
       </Link>
-      <Link
-        href="/"
-        className="inline-flex w-fit items-center gap-1 font-mono text-[10px] uppercase tracking-wide text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
-      >
-        <ArrowLeftIcon className="size-3.5 shrink-0" weight="bold" aria-hidden />
-        Home
-      </Link>
+      <span className="shrink-0 rounded-full border-2 border-black bg-[#ff6b1a] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
+        E2EE
+      </span>
     </div>
   );
 }
 
-type ChatSidebarSignOutFooterProps = {
+type ChatSidebarAccountFooterProps = {
+  displayName: string;
+  username: string;
   onSignOut: () => void;
 };
 
-export function ChatSidebarSignOutFooter({ onSignOut }: ChatSidebarSignOutFooterProps) {
+export function ChatSidebarAccountFooter({
+  displayName,
+  username,
+  onSignOut,
+}: ChatSidebarAccountFooterProps) {
   const { state, isMobile } = useSidebar();
   const collapsed = !isMobile && state === "collapsed";
+  const initial = initialsFromDisplayName(displayName).slice(0, 1);
 
   if (collapsed) {
     return (
-      <div className="flex w-full justify-center px-0.5">
+      <div className="flex w-full justify-center">
         <Tooltip>
           <TooltipTrigger asChild>
             <SidebarMenuButton
@@ -86,22 +88,36 @@ export function ChatSidebarSignOutFooter({ onSignOut }: ChatSidebarSignOutFooter
   }
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      className={cn(
-        "w-full border-2 border-black bg-white font-mono text-[10px] uppercase tracking-wide",
-        "shadow-[2px_2px_0_0_#000] hover:bg-[#ff6b1a]/10",
-      )}
-      onClick={() => void onSignOut()}
-    >
-      Sign out
-    </Button>
+    <div className="flex items-center gap-3">
+      <div
+        className="flex size-10 shrink-0 items-center justify-center rounded-md border-2 border-black bg-[#ff6b1a] font-mono text-sm font-bold text-white"
+        aria-hidden
+      >
+        {initial}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-oberyn-display text-sm tracking-wide text-neutral-900">{displayName}</p>
+        <p className="truncate font-mono text-[11px] text-muted-foreground">@{username}</p>
+      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-9 shrink-0 border-2 border-transparent hover:border-black hover:bg-neutral-50"
+            onClick={() => void onSignOut()}
+            aria-label="Sign out"
+          >
+            <SignOutIcon className="size-4" weight="bold" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top">Sign out</TooltipContent>
+      </Tooltip>
+    </div>
   );
 }
 
-/** Home icon on the far right of the main top bar (quick exit while sidebar is collapsed). */
 export function ChatHeaderTrailingHome() {
   return (
     <Tooltip>
@@ -110,7 +126,7 @@ export function ChatHeaderTrailingHome() {
           asChild
           size="icon-sm"
           variant="outline"
-          className="size-9 shrink-0 border-2 border-black bg-white text-foreground shadow-[2px_2px_0_0_#000] hover:bg-[#ff6b1a]/12"
+          className="size-9 shrink-0 border-2 border-black bg-white text-foreground shadow-[2px_2px_0_0_#000] hover:bg-neutral-100"
         >
           <Link href="/" aria-label="Home">
             <HouseIcon className="size-4" weight="bold" />
@@ -122,7 +138,7 @@ export function ChatHeaderTrailingHome() {
   );
 }
 
-export type ChatHeaderSearchProps = {
+export type ChatSidebarSearchProps = {
   query: string;
   onQueryChange: (q: string) => void;
   results: UserPublicInfo[] | undefined;
@@ -131,17 +147,17 @@ export type ChatHeaderSearchProps = {
   currentUserId: string | null;
 };
 
-export function ChatHeaderSearch({
+export function ChatSidebarSearch({
   query,
   onQueryChange,
   results,
   isLoading,
   onPickUser,
   currentUserId,
-}: ChatHeaderSearchProps) {
+}: ChatSidebarSearchProps) {
   return (
     <UserSearchField
-      variant="toolbar"
+      variant="sidebar"
       query={query}
       onQueryChange={onQueryChange}
       results={results}

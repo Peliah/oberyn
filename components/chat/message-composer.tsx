@@ -67,21 +67,17 @@ export function MessageComposer({
   };
 
   return (
-    <div className="relative border-t-2 border-black bg-[linear-gradient(180deg,#fff9ef_0%,#FDF6E3_45%,#fef8e8_100%)] p-3 pt-4">
-      <div
-        className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-[#ff6b1a]/55 to-transparent"
-        aria-hidden
-      />
+    <div className="border-t-2 border-black bg-white p-3">
       <div className="flex gap-2">
         <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder={
-            recipientPublicKeySpkiBase64 ? "Write an encrypted message…" : "Loading recipient key…"
+            recipientPublicKeySpkiBase64 ? "Message…" : "Loading keys…"
           }
           disabled={disabled}
           rows={2}
-          className="min-h-[4.5rem] flex-1 resize-none border-2 border-black font-mono text-xs"
+          className="min-h-[4rem] flex-1 resize-none rounded-md border-2 border-black bg-[#fafaf8] font-mono text-sm"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -94,15 +90,12 @@ export function MessageComposer({
           size="icon"
           disabled={disabled || !text.trim()}
           onClick={() => submit()}
-          className="shrink-0 border-2 border-black bg-[#ff6b1a] text-white shadow-[3px_3px_0_0_#000] hover:bg-[#e85f12]"
+          className="shrink-0 rounded-md border-2 border-black bg-[#ff6b1a] text-white shadow-[2px_2px_0_0_#000] hover:bg-[#e85f12]"
           aria-label="Send message"
         >
           <PaperPlaneRight className="size-5" weight="bold" />
         </Button>
       </div>
-      <p className="mt-2 font-mono text-[10px] text-muted-foreground">
-        End-to-end encrypted on device. Enter sends, Shift+Enter newline.
-      </p>
     </div>
   );
 }

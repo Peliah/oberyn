@@ -17,7 +17,8 @@ type UserSearchFieldProps = {
   /** Lighter chrome when embedded under the sidebar header. */
   embedded?: boolean;
   /** Top bar: compact wrap, results as overlay so the header does not jump. */
-  variant?: "default" | "embedded" | "toolbar";
+  /** Sidebar: rounded field + dropdown below (reference-style). */
+  variant?: "default" | "embedded" | "toolbar" | "sidebar";
 };
 
 export function UserSearchField({
@@ -32,33 +33,36 @@ export function UserSearchField({
 }: UserSearchFieldProps) {
   const trimmed = query.trim();
   const isToolbar = variant === "toolbar";
+  const isSidebar = variant === "sidebar";
   const embeddedLike = embedded || isToolbar;
 
   return (
     <div
       className={cn(
         "p-2",
-        embedded && !isToolbar && "rounded-none bg-transparent",
-        !embeddedLike && "border-b-2 border-black",
+        embedded && !isToolbar && !isSidebar && "rounded-none bg-transparent",
+        !embeddedLike && !isSidebar && "border-b-2 border-black",
         isToolbar && "relative z-[5] p-0",
+        isSidebar && "p-0",
       )}
     >
       <div className="relative">
         <MagnifyingGlass
           className={cn(
             "pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground",
-            isToolbar && "left-2.5",
+            (isToolbar || isSidebar) && "left-3",
           )}
           aria-hidden
         />
         <Input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          placeholder="Search people…"
+          placeholder={isSidebar ? "Find someone to message…" : "Search people…"}
           className={cn(
-            "border-2 border-black pl-8 font-mono text-xs shadow-[2px_2px_0_0_rgba(0,0,0,0.85)]",
+            "border-2 border-black pl-8 font-mono text-xs shadow-[2px_2px_0_0_rgba(0,0,0,1)]",
             embeddedLike && "bg-white",
             isToolbar && "h-9 pl-9 text-[13px]",
+            isSidebar && "h-10 rounded-lg bg-white pl-9 text-sm shadow-[3px_3px_0_0_rgba(0,0,0,1)]",
           )}
           aria-label="Search users"
         />
@@ -70,6 +74,7 @@ export function UserSearchField({
             isToolbar
               ? "absolute left-0 right-0 top-full z-[60] mt-1 max-h-48 overflow-y-auto shadow-[6px_6px_0_0_rgba(0,0,0,0.85)]"
               : "mt-2 max-h-40 overflow-y-auto",
+            isSidebar && "mt-2 rounded-lg shadow-[3px_3px_0_0_rgba(0,0,0,1)]",
           )}
         >
           {isLoading ? (
@@ -80,7 +85,7 @@ export function UserSearchField({
           ) : results && results.length === 0 ? (
             <p className="px-2 py-3 font-mono text-[10px] text-muted-foreground">No matches</p>
           ) : (
-            <ul className="divide-y-2 divide-black">
+            <ul className="divide-y divide-black">
               {results
                 ?.filter((u) => u.id !== currentUserId)
                 .map((u) => (
