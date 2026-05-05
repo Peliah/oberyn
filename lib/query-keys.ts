@@ -1,5 +1,5 @@
 export const queryKeys = {
-  health: ["whisperbox", "health"] as const,
+  health: ["api", "health"] as const,
   session: ["auth", "session"] as const,
   me: () => ["auth", "me"] as const,
   conversations: ["conversations"] as const,
