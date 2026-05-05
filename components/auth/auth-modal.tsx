@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { LoginForm } from "@/components/auth/login-form";
@@ -24,10 +25,9 @@ type AuthModalProps = {
 };
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
+  const router = useRouter();
   const [mode, setMode] = useState<AuthMode>("login");
-  const { login, register, isLoggingIn, isRegistering } = useAuth({
-    onAuthenticated: () => onOpenChange(false),
-  });
+  const { login, register, isLoggingIn, isRegistering } = useAuth();
 
   function handleOpenChange(next: boolean) {
     if (next) setMode("login");
@@ -36,10 +36,15 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
 
   async function handleLoginValidated(values: LoginFormValues) {
     await login(values);
+    onOpenChange(false);
+    /** Let SessionProvider apply tokens before /chat reads useSession (avoids bounce to /). */
+    queueMicrotask(() => router.push("/chat"));
   }
 
   async function handleRegisterValidated(values: RegisterFormValues) {
     await register(values);
+    onOpenChange(false);
+    queueMicrotask(() => router.push("/chat"));
   }
 
   return (

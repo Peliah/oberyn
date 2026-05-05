@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 export type { LoginFormValues };
 
 type LoginFormProps = {
-  /** Called after client-side validation passes (wire to WhisperBox later). */
+  /** Called after client-side validation passes before submit. */
   onValidated?: (values: LoginFormValues) => void;
   onSwitchToRegister: () => void;
   defaultUsername?: string;
