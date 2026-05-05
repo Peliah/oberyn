@@ -9,9 +9,11 @@ import { HeroHeading } from "@/components/landing/hero-heading";
 import { HeroPrimaryCta } from "@/components/landing/hero-primary-cta";
 import { HeroTagline } from "@/components/landing/hero-tagline";
 import { LandingShell } from "@/components/landing/landing-shell";
+import { useSession } from "@/lib/session/session-context";
 
 export function OberynLanding() {
   const [authOpen, setAuthOpen] = useState(false);
+  const { accessToken, sessionRestored } = useSession();
 
   return (
     <>
@@ -22,7 +24,10 @@ export function OberynLanding() {
               <div>
                 <HeroHeading />
                 <HeroTagline />
-                <HeroPrimaryCta onOpenAuth={() => setAuthOpen(true)} />
+                <HeroPrimaryCta
+                  onOpenAuth={() => setAuthOpen(true)}
+                  chatHref={sessionRestored && accessToken ? "/chat" : undefined}
+                />
               </div>
               <HeroAsideVisual />
             </div>

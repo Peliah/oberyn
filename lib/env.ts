@@ -5,7 +5,7 @@ function readWhisperboxUrl(): string {
   if (!raw || raw.trim() === "") {
     if (process.env.NODE_ENV === "development") {
       console.warn(
-        `[env] Missing ${ENV_KEY}. Copy .env.example to .env.local and set the WhisperBox URL.`,
+        `[env] Missing ${ENV_KEY}. Copy .env.example to .env.local and set the backend API URL.`,
       );
     }
     return "";
