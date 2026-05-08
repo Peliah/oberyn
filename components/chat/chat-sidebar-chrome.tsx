@@ -40,12 +40,12 @@ export function ChatSidebarBrand() {
 
   return (
     <div className="mb-4 flex items-center justify-between gap-2">
-      <Link href="/" className="block min-w-0 max-w-[min(100%,11rem)] shrink hover:opacity-90">
-        <OberynWordmark className="max-h-9 w-auto" />
-      </Link>
-      <span className="shrink-0 rounded-full border-2 border-black bg-[#ff6b1a] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
+      {/* <Link href="/" className="min-w-0 max-w-[min(100%,11rem)] shrink hover:opacity-90"> */}
+        <OberynWordmark className="w-auto" />
+      {/* </Link> */}
+      {/* <span className="shrink-0 rounded-full border-2 border-black bg-[#ff6b1a] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-white">
         E2EE
-      </span>
+      </span> */}
     </div>
   );
 }
